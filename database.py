@@ -1,7 +1,6 @@
 # database.py
 from pymongo import MongoClient
 from config import MONGO_URI, DATABASE_NAME
-import re
 
 class Database:
     def __init__(self):
@@ -10,8 +9,8 @@ class Database:
         self.users = self.db.users
         self.buttons = self.db.buttons
         self.scripts = self.db.scripts
+        self.files = self.db.files
 
-    # ---------- User ----------
     def get_user(self, user_id):
         return self.users.find_one({"user_id": user_id})
 
@@ -28,7 +27,6 @@ class Database:
     def set_user_lang(self, user_id, lang):
         self.users.update_one({"user_id": user_id}, {"$set": {"lang": lang}}, upsert=True)
 
-    # ---------- Buttons ----------
     def get_buttons(self, user_id):
         data = self.buttons.find_one({"user_id": user_id})
         return data.get("buttons", []) if data else []
@@ -43,7 +41,6 @@ class Database:
     def delete_buttons(self, user_id):
         self.buttons.delete_one({"user_id": user_id})
 
-    # ---------- Script (temporary) ----------
     def set_script_state(self, user_id, state, data=None):
         self.scripts.update_one(
             {"user_id": user_id},
@@ -60,5 +57,4 @@ class Database:
     def clear_script_state(self, user_id):
         self.scripts.delete_one({"user_id": user_id})
 
-# Singleton instance
 db = Database()
