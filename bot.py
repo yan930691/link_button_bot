@@ -23,7 +23,6 @@ logger = logging.getLogger(__name__)
 def main():
     application = Application.builder().token(BOT_TOKEN).build()
 
-    # Conversation Handler
     conv_handler = ConversationHandler(
         entry_points=[
             CommandHandler("new", new_buttons),
@@ -39,7 +38,6 @@ def main():
         fallbacks=[CommandHandler("cancel", cancel)],
     )
 
-    # Command Handlers
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help_command))
     application.add_handler(CommandHandler("view", view_buttons))
@@ -49,18 +47,12 @@ def main():
     application.add_handler(CommandHandler("language", language_menu))
     application.add_handler(CommandHandler("reset", reset_script))
     application.add_handler(conv_handler)
-
-    # Deep Link Handler (start=file_xxx)
     application.add_handler(CommandHandler("start", deep_link_handler))
 
-    # Callback Query Handlers
     application.add_handler(CallbackQueryHandler(callback_handler))
     application.add_handler(CallbackQueryHandler(language_callback, pattern="^lang_"))
 
-    # Main Message Handler (Text)
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, process_user_message))
-
-    # File Handler (Document, Video, Audio, Photo)
     application.add_handler(MessageHandler(
         filters.Document.ALL | filters.VIDEO | filters.AUDIO | filters.PHOTO,
         handle_file
