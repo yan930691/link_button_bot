@@ -34,5 +34,7 @@ def create_telegraph_page(title, content):
 
 def format_content_to_html(text):
     paragraphs = text.split("\n\n")
-    html = "".join([f"<p>{p.replace('\n', '<br>')}</p>" for p in paragraphs if p.strip()])
+    # ✅ f-string အတွင်းမှာ backslash ကို တိုက်ရိုက်မသုံးဘဲ variable နဲ့ သုံးပါ
+    newline = "\n"
+    html = "".join([f"<p>{p.replace(newline, '<br>')}</p>" for p in paragraphs if p.strip()])
     return html
